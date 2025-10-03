@@ -99,3 +99,25 @@ Follow these steps to set up and run the RAG Document Chatbot locally.
 4.  Once the document is processed, you can start asking questions related to its content. The chatbot will retrieve relevant information and synthesize an answer.
 
 
+## 🛠️ Technologies Used
+
+### Backend
+*   **Python 3.12+**
+*   **FastAPI**: Web framework for building the API.
+*   **LangChain**: Framework for developing applications powered by language models.
+*   **`sentence-transformers`**: For local text embedding (using `all-MiniLM-L6-v2`).
+*   **ChromaDB**: Lightweight, in-memory (or persistent) vector database for storing and retrieving document embeddings.
+*   **Google Generative AI SDK (`google-generativeai`)**: For interacting with Gemini LLMs.
+*   **`pypdf`**: For extracting text from PDF documents.
+*   **`rank_bm25`**: For keyword-based retrieval (BM25 algorithm).
+*   **`nltk`**: For sentence tokenization in chunking.
+*   **`uvicorn`**: ASGI server for running FastAPI.
+
+### Frontend
+*   **React** (likely, given `.jsx` files)
+*   **Vite**: Frontend build tool.
+*   **npm/yarn**: Package manager.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to open issues or submit pull requests.
