@@ -1,0 +1,9 @@
+#ignore files and folders
+__pycache/
+node_modules/
+new_venv/
+uploaded_documents/
+*.env
+*test.py
+*nltk
+
