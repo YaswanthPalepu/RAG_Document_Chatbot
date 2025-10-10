@@ -1,5 +1,6 @@
+import time
 from typing import List
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel
 from backend.app.services.retrieval import retrieve_relevant_chunks
 from backend.app.services.generation import generate_answer_map_reduce
@@ -18,10 +19,39 @@ class QueryResponse(BaseModel):
     answer: str
     sources: List[str] = [] # Added sources field, default to empty list
 
+RATE_LIMIT_STORE = {}
+RATE_LIMIT_DURATION = 60  # seconds
+RATE_LIMIT_REQUESTS = 10  # requests per duration
+
+
 @router.post("/ask", response_model=QueryResponse)
-async def get_chat_answer(request: QueryRequest):
+async def get_chat_answer(request: QueryRequest, http_request: Request):
     session_id = request.session_id
     user_query = request.query
+
+
+     # --- 2. Basic Rate Limiting (In-memory, for demo) ---
+    client_ip = http_request.client.host
+    current_time = time.time()
+    
+    if client_ip not in RATE_LIMIT_STORE:
+        RATE_LIMIT_STORE[client_ip] = []
+    
+    # Remove old timestamps outside the window
+    RATE_LIMIT_STORE[client_ip] = [
+        t for t in RATE_LIMIT_STORE[client_ip] if current_time - t < RATE_LIMIT_DURATION
+    ]
+
+    if len(RATE_LIMIT_STORE[client_ip]) >= RATE_LIMIT_REQUESTS:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Too many requests. Please try again in {RATE_LIMIT_DURATION} seconds."
+        )
+    
+    RATE_LIMIT_STORE[client_ip].append(current_time)
+    # --- End Rate Limiting ---
+
+
 
     if session_id not in SESSION_VECTOR_STORES:
         raise HTTPException(status_code=404, detail="Session not found or document not indexed. Please upload a document.")

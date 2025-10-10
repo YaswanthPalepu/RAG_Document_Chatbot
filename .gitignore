@@ -1,9 +1,9 @@
 #ignore files and folders
-__pycache/
+__pycache__/
 node_modules/
 new_venv/
 uploaded_documents/
 *.env
 *test.py
 *nltk
-
+new_venv1/
