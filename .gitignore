@@ -7,3 +7,4 @@ uploaded_documents/
 *test.py
 *nltk
 new_venv1/
+*.py[cod]
